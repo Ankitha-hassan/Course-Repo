@@ -1,15 +1,17 @@
 using CourseService.DataAccess.DBContext;
 using CourseService.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using CourseService.Domain.Repository;
 using CourseService.Domain.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-//register services
-builder.Services.AddScoped<ICourseService,CourseServices>();
 
-builder.Services.AddScoped<ICourseRepository,CourseRepository>();
+// Register services
+builder.Services.AddScoped<ICourseService, CourseServices>();
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -20,31 +22,28 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Add services to the container.
-
-builder.Services.AddControllers();
+// Database
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
+// Controllers
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure pipeline
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tutorial API v1");
-        c.RoutePrefix = string.Empty; // Swagger opens at root "/"
+        c.RoutePrefix = string.Empty;
     });
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

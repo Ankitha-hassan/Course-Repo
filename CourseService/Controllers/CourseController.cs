@@ -1,0 +1,137 @@
+using CourseService.Constant;
+using CourseService.DataAccess.Models;
+using CourseService.Domain.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace CourseService.Controllers
+{
+    [Route(RouteMapConstants.BaseControllerRoute)]
+    [ApiController]
+    public class CoursesController : ControllerBase
+    {
+        private readonly ICourseService _courseService;
+
+        public CoursesController(ICourseService courseService)
+        {
+            _courseService = courseService;
+        }
+
+        #region Course Endpoints
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllCourses()
+        {
+            var (courses, error) = await _courseService.GetAllCourses();
+            if (error != null)
+                return StatusCode(500, error);
+
+            if (courses == null || !courses.Any())
+                return NotFound("No courses found");
+
+            return Ok(courses);
+        }
+
+        [HttpGet("{courseId}")]
+        public async Task<IActionResult> GetCourseById(int courseId)
+        {
+            var (course, error) = await _courseService.GetCourseById(courseId);
+            if (error != null)
+                return StatusCode(500, error);
+
+            if (course == null)
+                return NotFound($"Course with ID {courseId} not found");
+
+            return Ok(course);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCourse([FromBody] Course course)
+        {
+            if (course == null)
+                return BadRequest("Course data is required");
+
+            var (created, error) = await _courseService.AddCourse(course);
+            if (error != null)
+                return StatusCode(500, error);
+
+            return CreatedAtAction(nameof(GetCourseById), new { courseId = created.CourseId }, created);
+        }
+
+        [HttpPut("{courseId}")]
+        public async Task<IActionResult> UpdateCourse(int courseId, [FromBody] Course course)
+        {
+            if (course == null)
+                return BadRequest("Course data is required");
+
+            course.CourseId = courseId;
+            var (updated, error) = await _courseService.UpdateCourse(course);
+
+            if (error != null)
+                return StatusCode(500, error);
+
+            if (updated == null)
+                return NotFound($"Course with ID {courseId} not found");
+
+            return Ok(updated);
+        }
+
+        [HttpDelete("{courseId}")]
+        public async Task<IActionResult> DeleteCourse(int courseId)
+        {
+            var (deleted, error) = await _courseService.DeleteCourse(courseId);
+
+            if (error != null)
+                return StatusCode(500, error);
+
+            if (deleted == null)
+                return NotFound($"Course with ID {courseId} not found");
+
+            return Ok($"Course with ID {courseId} was deleted successfully");
+        }
+
+        #endregion
+
+        #region Topic Endpoints
+
+        [HttpGet("topics")]
+        public async Task<IActionResult> GetAllTopics()
+        {
+            var (topics, error) = await _courseService.GetAllTopics();
+            if (error != null)
+                return StatusCode(500, error);
+
+            if (topics == null || !topics.Any())
+                return NotFound("No topics found");
+
+            return Ok(topics);
+        }
+
+        [HttpGet("topics/{topicId}")]
+        public async Task<IActionResult> GetTopicById(int topicId)
+        {
+            var (topic, error) = await _courseService.GetTopicById(topicId);
+            if (error != null)
+                return StatusCode(500, error);
+
+            if (topic == null)
+                return NotFound($"Topic with ID {topicId} not found");
+
+            return Ok(topic);
+        }
+
+        [HttpPost("topics")]
+        public async Task<IActionResult> AddTopic([FromBody] Topic topic)
+        {
+            if (topic == null)
+                return BadRequest("Topic data is required");
+
+            var (created, error) = await _courseService.AddTopic(topic);
+            if (error != null)
+                return StatusCode(500, error);
+
+            return Ok(created);
+        }
+
+        #endregion
+    }
+}

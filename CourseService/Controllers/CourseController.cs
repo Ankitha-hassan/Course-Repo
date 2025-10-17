@@ -31,7 +31,7 @@ namespace CourseService.Controllers
             return Ok(courses);
         }
 
-        [HttpGet("{courseId}")]
+        [HttpGet(RouteMapConstants.GetCourseById)]
         public async Task<IActionResult> GetCourseById(int courseId)
         {
             var (course, error) = await _courseService.GetCourseById(courseId);
@@ -57,7 +57,7 @@ namespace CourseService.Controllers
             return CreatedAtAction(nameof(GetCourseById), new { courseId = created.CourseId }, created);
         }
 
-        [HttpPut("{courseId}")]
+        [HttpPut(RouteMapConstants.UpdateCourseById)]
         public async Task<IActionResult> UpdateCourse(int courseId, [FromBody] Course course)
         {
             if (course == null)
@@ -75,7 +75,7 @@ namespace CourseService.Controllers
             return Ok(updated);
         }
 
-        [HttpDelete("{courseId}")]
+        [HttpDelete(RouteMapConstants.DeleteCourseById)]
         public async Task<IActionResult> DeleteCourse(int courseId)
         {
             var (deleted, error) = await _courseService.DeleteCourse(courseId);
@@ -93,7 +93,7 @@ namespace CourseService.Controllers
 
         #region Topic Endpoints
 
-        [HttpGet("topics")]
+        [HttpGet(RouteMapConstants.GetAllTopicsByCourseId)]
         public async Task<IActionResult> GetAllTopics()
         {
             var (topics, error) = await _courseService.GetAllTopics();
@@ -106,7 +106,7 @@ namespace CourseService.Controllers
             return Ok(topics);
         }
 
-        [HttpGet("topics/{topicId}")]
+        [HttpGet(RouteMapConstants.GetTopicById)]
         public async Task<IActionResult> GetTopicById(int topicId)
         {
             var (topic, error) = await _courseService.GetTopicById(topicId);
@@ -119,7 +119,7 @@ namespace CourseService.Controllers
             return Ok(topic);
         }
 
-        [HttpPost("topics")]
+        [HttpPost(RouteMapConstants.AddTopic)]
         public async Task<IActionResult> AddTopic([FromBody] Topic topic)
         {
             if (topic == null)
@@ -132,7 +132,7 @@ namespace CourseService.Controllers
             return Ok(created);
         }
 
-        [HttpPut("topics/{topicId}")]
+        [HttpPut(RouteMapConstants.UpdateTopicById)]
         public async Task<IActionResult> UpdateTopic(int topicId, [FromBody] Topic topic)
         {
             if (topic == null)
@@ -151,7 +151,7 @@ namespace CourseService.Controllers
             return Ok(updated);
         }
 
-        [HttpDelete("topics/{topicId}")]
+        [HttpDelete(RouteMapConstants.DeleteTopicById)]
         public async Task<IActionResult> DeleteTopic(int topicId)
         {
             var (deleted, error) = await _courseService.DeleteTopic(topicId);
@@ -170,7 +170,7 @@ namespace CourseService.Controllers
 
         #region Subtopics Endpoints
 
-        [HttpGet("topics/{topicId}/subtopics")]
+        [HttpGet(RouteMapConstants.GetSubTopicsByTopicId)]
         public async Task<IActionResult> GetSubTopicsByTopicId(int topicId)
         {
             var (subtopics, error) = await _courseService.GetSubTopicsByTopicId(topicId);
@@ -184,7 +184,7 @@ namespace CourseService.Controllers
             return Ok(subtopics);
         }
 
-        [HttpGet("subtopics/{subTopicId}")]
+        [HttpGet(RouteMapConstants.GetSubTopicById)]
         public async Task<IActionResult> GetSubTopicById(int subTopicId)
         {
             var (subtopic, error) = await _courseService.GetSubTopicById(subTopicId);
@@ -198,7 +198,7 @@ namespace CourseService.Controllers
             return Ok(subtopic);
         }
 
-        [HttpPost("topics/{topicId}/subtopics")]
+        [HttpPost(RouteMapConstants.AddSubTopicByTopicID)]
         public async Task<IActionResult> AddSubTopic(int topicId, [FromBody] SubTopic subTopic)
         {
             if (subTopic == null)
@@ -213,7 +213,7 @@ namespace CourseService.Controllers
             return CreatedAtAction(nameof(GetSubTopicById), new { subTopicId = created.SubTopicId }, created);
         }
 
-        [HttpPut("subtopics/{subTopicId}")]
+        [HttpPut(RouteMapConstants.UpdateSubTopicById)]
         public async Task<IActionResult> UpdateSubTopic(int subTopicId, [FromBody] SubTopic subTopic)
         {
             if (subTopic == null)
@@ -231,7 +231,7 @@ namespace CourseService.Controllers
             return Ok(updated);
         }
 
-        [HttpDelete("subtopics/{subTopicId}")]
+        [HttpDelete(RouteMapConstants.DeleteSubTopicById)]
         public async Task<IActionResult> DeleteSubTopic(int subTopicId)
         {
             var (deleted, error) = await _courseService.DeleteSubTopic(subTopicId);

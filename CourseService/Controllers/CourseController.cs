@@ -132,6 +132,119 @@ namespace CourseService.Controllers
             return Ok(created);
         }
 
+        [HttpPut("topics/{topicId}")]
+        public async Task<IActionResult> UpdateTopic(int topicId, [FromBody] Topic topic)
+        {
+            if (topic == null)
+                return BadRequest("Topic data is required");
+
+            topic.TopicId = topicId;
+
+            var (updated, error) = await _courseService.UpdateTopic(topic);
+
+            if (error != null)
+                return StatusCode(500, error);
+
+            if (updated == null)
+                return NotFound($"Topic with ID {topicId} not found");
+
+            return Ok(updated);
+        }
+
+        [HttpDelete("topics/{topicId}")]
+        public async Task<IActionResult> DeleteTopic(int topicId)
+        {
+            var (deleted, error) = await _courseService.DeleteTopic(topicId);
+
+            if (error != null)
+                return StatusCode(500, error);
+
+            if (deleted == null)
+                return NotFound($"Topic with ID {topicId} not found");
+
+            return Ok($"Topic with ID {topicId} was deleted successfully");
+        }
+
+
+        #endregion
+
+        #region Subtopics Endpoints
+
+        [HttpGet("topics/{topicId}/subtopics")]
+        public async Task<IActionResult> GetSubTopicsByTopicId(int topicId)
+        {
+            var (subtopics, error) = await _courseService.GetSubTopicsByTopicId(topicId);
+
+            if (error != null)
+                return StatusCode(500, error);
+
+            if (subtopics == null || !subtopics.Any())
+                return NotFound($"No subtopics found for Topic ID {topicId}");
+
+            return Ok(subtopics);
+        }
+
+        [HttpGet("subtopics/{subTopicId}")]
+        public async Task<IActionResult> GetSubTopicById(int subTopicId)
+        {
+            var (subtopic, error) = await _courseService.GetSubTopicById(subTopicId);
+
+            if (error != null)
+                return StatusCode(500, error);
+
+            if (subtopic == null)
+                return NotFound($"Subtopic with ID {subTopicId} not found");
+
+            return Ok(subtopic);
+        }
+
+        [HttpPost("topics/{topicId}/subtopics")]
+        public async Task<IActionResult> AddSubTopic(int topicId, [FromBody] SubTopic subTopic)
+        {
+            if (subTopic == null)
+                return BadRequest("Subtopic data is required");
+
+            subTopic.TopicId = topicId;
+            var (created, error) = await _courseService.AddSubTopic(subTopic);
+
+            if (error != null)
+                return StatusCode(500, error);
+
+            return CreatedAtAction(nameof(GetSubTopicById), new { subTopicId = created.SubTopicId }, created);
+        }
+
+        [HttpPut("subtopics/{subTopicId}")]
+        public async Task<IActionResult> UpdateSubTopic(int subTopicId, [FromBody] SubTopic subTopic)
+        {
+            if (subTopic == null)
+                return BadRequest("Subtopic data is required");
+
+            subTopic.SubTopicId = subTopicId;
+            var (updated, error) = await _courseService.UpdateSubTopic(subTopic);
+
+            if (error != null)
+                return StatusCode(500, error);
+
+            if (updated == null)
+                return NotFound($"Subtopic with ID {subTopicId} not found");
+
+            return Ok(updated);
+        }
+
+        [HttpDelete("subtopics/{subTopicId}")]
+        public async Task<IActionResult> DeleteSubTopic(int subTopicId)
+        {
+            var (deleted, error) = await _courseService.DeleteSubTopic(subTopicId);
+
+            if (error != null)
+                return StatusCode(500, error);
+
+            if (deleted == null)
+                return NotFound($"Subtopic with ID {subTopicId} not found");
+
+            return Ok($"Subtopic with ID {subTopicId} was deleted successfully");
+        }
+
         #endregion
     }
 }

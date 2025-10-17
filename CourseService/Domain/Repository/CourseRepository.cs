@@ -14,7 +14,7 @@ namespace CourseService.Domain.Repository
         {
             _contextFactory = contextFactory;
         }
-        #region Course
+     #region Course
         public async Task<(List<Course> Courses, WebAPIErrorMessage Error)> GetAllCoursesAsync()
         {
             try
@@ -144,7 +144,8 @@ namespace CourseService.Domain.Repository
             }
         }
         #endregion
-        #region Topic
+
+     #region Topic
         public async Task<(List<Topic> Topics, WebAPIErrorMessage Error)> GetAllTopicsAsync()
         {
             try
@@ -211,6 +212,225 @@ namespace CourseService.Domain.Repository
                 });
             }
         }
-    }
+        public async Task<(Topic Topic, WebAPIErrorMessage Error)> UpdateTopicAsync(Topic topic)
+        {
+            try
+            {
+                using (var context = _contextFactory.CreateDbContext())
+                {
+                    var existingTopic = await context.Topics.FindAsync(topic.TopicId);
+                    if (existingTopic == null)
+                    {
+                        return (null, new WebAPIErrorMessage
+                        {
+                            Message = "Topic not found."
+                        });
+                    }
+
+                    existingTopic.TopicName = topic.TopicName;
+                    existingTopic.CourseId = topic.CourseId;
+
+                    await context.SaveChangesAsync();
+                    return (existingTopic, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                return (null, new WebAPIErrorMessage
+                {
+                    Message = $"Error updating topic: {ex.Message}",
+                    StackTrace = ex.StackTrace
+                });
+            }
+        }
+
+        public async Task<(Topic Topic, WebAPIErrorMessage Error)> DeleteTopicAsync(int topicId)
+        {
+            try
+            {
+                using (var context = _contextFactory.CreateDbContext())
+                {
+                    var topic = await context.Topics.FindAsync(topicId);
+                    if (topic == null)
+                    {
+                        return (null, new WebAPIErrorMessage
+                        {
+                            Message = "Topic not found."
+                        });
+                    }
+
+                    context.Topics.Remove(topic);
+                    await context.SaveChangesAsync();
+
+                    return (topic, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                return (null, new WebAPIErrorMessage
+                {
+                    Message = $"Error deleting topic: {ex.Message}",
+                    StackTrace = ex.StackTrace
+                });
+            }
+
+        }
     #endregion
-}
+
+     #region Subtopics
+
+        public async Task<(List<SubTopic> subTopics, WebAPIErrorMessage Error)> GetSubTopicsByTopicId(int topicId)
+        {
+            try
+            {
+                using (var context = _contextFactory.CreateDbContext())
+                {
+                    var subTopics = await context.SubTopics
+                        .Where(st => st.TopicId == topicId)
+                        .ToListAsync();
+
+                    if (subTopics == null || !subTopics.Any())
+                    {
+                        return (null, new WebAPIErrorMessage
+                        {
+                            Message = $"No subtopics found for Topic ID {topicId}."
+                        });
+                    }
+
+                    return (subTopics, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                return (null, new WebAPIErrorMessage
+                {
+                    Message = $"Error retrieving subtopics: {ex.Message}",
+                    StackTrace = ex.StackTrace
+                });
+            }
+        }
+
+        public async Task<(SubTopic subTopics, WebAPIErrorMessage Error)> GetSubTopicById(int subTopicId)
+        {
+            try
+            {
+                using (var context = _contextFactory.CreateDbContext())
+                {
+                    var subTopic = await context.SubTopics.FindAsync(subTopicId);
+                    if (subTopic == null)
+                    {
+                        return (null, new WebAPIErrorMessage
+                        {
+                            Message = $"Subtopic not found with ID {subTopicId}."
+                        });
+                    }
+
+                    return (subTopic, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                return (null, new WebAPIErrorMessage
+                {
+                    Message = $"Error retrieving subtopic: {ex.Message}",
+                    StackTrace = ex.StackTrace
+                });
+            }
+        }
+
+        public async Task<(SubTopic subTopics, WebAPIErrorMessage Error)> AddSubTopic(SubTopic subTopic)
+        {
+            try
+            {
+                using (var context = _contextFactory.CreateDbContext())
+                {
+                    var newSubTopic = new SubTopic
+                    {
+                        TopicId = subTopic.TopicId,
+                        SubTopicName = subTopic.SubTopicName,
+                        Content = subTopic.Content
+                    };
+
+                    await context.SubTopics.AddAsync(newSubTopic);
+                    await context.SaveChangesAsync();
+
+                    return (newSubTopic, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                return (null, new WebAPIErrorMessage
+                {
+                    Message = $"Error adding subtopic: {ex.Message}",
+                    StackTrace = ex.StackTrace
+                });
+            }
+        }
+
+        public async Task<(SubTopic subTopics, WebAPIErrorMessage Error)> UpdateSubTopic(SubTopic subTopic)
+        {
+            try
+            {
+                using (var context = _contextFactory.CreateDbContext())
+                {
+                    var existingSubTopic = await context.SubTopics.FindAsync(subTopic.SubTopicId);
+                    if (existingSubTopic == null)
+                    {
+                        return (null, new WebAPIErrorMessage
+                        {
+                            Message = "Subtopic not found."
+                        });
+                    }
+
+                    existingSubTopic.SubTopicName = subTopic.SubTopicName;
+                    existingSubTopic.Content = subTopic.Content;
+                    existingSubTopic.TopicId = subTopic.TopicId;
+
+                    await context.SaveChangesAsync();
+                    return (existingSubTopic, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                return (null, new WebAPIErrorMessage
+                {
+                    Message = $"Error updating subtopic: {ex.Message}",
+                    StackTrace = ex.StackTrace
+                });
+            }
+        }
+
+        public async Task<(SubTopic subTopics, WebAPIErrorMessage Error)> DeleteSubTopic(int subTopicId)
+        {
+            try
+            {
+                using (var context = _contextFactory.CreateDbContext())
+                {
+                    var subTopic = await context.SubTopics.FindAsync(subTopicId);
+                    if (subTopic == null)
+                    {
+                        return (null, new WebAPIErrorMessage
+                        {
+                            Message = "Subtopic not found."
+                        });
+                    }
+
+                    context.SubTopics.Remove(subTopic);
+                    await context.SaveChangesAsync();
+
+                    return (subTopic, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                return (null, new WebAPIErrorMessage
+                {
+                    Message = $"Error deleting subtopic: {ex.Message}",
+                    StackTrace = ex.StackTrace
+                });
+            }
+        }
+
+        #endregion
+    }
+    }

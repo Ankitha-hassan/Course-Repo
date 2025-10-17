@@ -16,5 +16,15 @@ namespace CourseService.Domain.Interfaces
       Task<(List<Topic> Topics, WebAPIErrorMessage Error)> GetAllTopicsAsync();
         Task<(Topic Topic, WebAPIErrorMessage Error)> GetTopicByIdAsync(int topicId);
         Task<(Topic Topic, WebAPIErrorMessage Error)> AddTopicAsync(Topic topic);
+        Task<(Topic Topic, WebAPIErrorMessage Error)> UpdateTopicAsync(Topic topic);
+        Task<(Topic Topic, WebAPIErrorMessage Error)> DeleteTopicAsync(int topicId);
+
+
+        // Subtopics
+        Task<(List<SubTopic> subTopics, WebAPIErrorMessage Error)> GetSubTopicsByTopicId(int topicId);
+        Task<(SubTopic subTopics, WebAPIErrorMessage Error)> GetSubTopicById(int subTopicId);
+        Task<(SubTopic subTopics, WebAPIErrorMessage Error)> AddSubTopic(SubTopic subTopic);
+        Task<(SubTopic subTopics, WebAPIErrorMessage Error)> UpdateSubTopic(SubTopic subTopic);
+        Task<(SubTopic subTopics, WebAPIErrorMessage Error)> DeleteSubTopic(int subTopicId);
     }
 }

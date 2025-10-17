@@ -106,15 +106,16 @@ namespace CourseService.Controllers
             return Ok(topics);
         }
 
+       
         [HttpGet(RouteMapConstants.GetTopicById)]
-        public async Task<IActionResult> GetTopicById(int topicId)
+        public async Task<IActionResult> GetTopicById(int courseId)
         {
-            var (topic, error) = await _courseService.GetTopicById(topicId);
+            var (topic, error) = await _courseService.GetTopicById(courseId);
             if (error != null)
                 return StatusCode(500, error);
 
             if (topic == null)
-                return NotFound($"Topic with ID {topicId} not found");
+                return NotFound($"Topic with ID {courseId} not found");
 
             return Ok(topic);
         }

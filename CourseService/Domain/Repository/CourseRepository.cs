@@ -15,7 +15,7 @@ namespace CourseService.Domain.Repository
             _contextFactory = contextFactory;
         }
      #region Course
-        public async Task<(List<Course> Courses, WebAPIErrorMessage Error)> GetAllCoursesAsync()
+        public async Task<(List<Course>? Courses, WebAPIErrorMessage? Error)> GetAllCoursesAsync()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace CourseService.Domain.Repository
             }
         }
 
-        public async Task<(Course Course, WebAPIErrorMessage Error)> GetCourseByIdAsync(int courseId)
+        public async Task<(Course? Course, WebAPIErrorMessage? Error)> GetCourseByIdAsync(int courseId)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace CourseService.Domain.Repository
             }
         }
 
-        public async Task<(Course Course, WebAPIErrorMessage Error)> AddCourseAsync(Course course)
+        public async Task<(Course? Course, WebAPIErrorMessage? Error)> AddCourseAsync(Course course)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace CourseService.Domain.Repository
             }
         }
 
-        public async Task<(Course Course, WebAPIErrorMessage Error)> UpdateCourseAsync(Course course)
+        public async Task<(Course? Course, WebAPIErrorMessage? Error)> UpdateCourseAsync(Course course)
         {
             try
             {
@@ -114,7 +114,7 @@ namespace CourseService.Domain.Repository
             }
         }
 
-        public async Task<(Course Course, WebAPIErrorMessage Error)> DeleteCourseAsync(int courseId)
+        public async Task<(Course? Course, WebAPIErrorMessage? Error)> DeleteCourseAsync(int courseId)
         {
             try
             {
@@ -146,7 +146,7 @@ namespace CourseService.Domain.Repository
         #endregion
 
      #region Topic
-        public async Task<(List<Topic> Topics, WebAPIErrorMessage Error)> GetAllTopicsAsync()
+        public async Task<(List<Topic>? Topics, WebAPIErrorMessage? Error)> GetAllTopicsAsync()
         {
             try
             {
@@ -165,13 +165,13 @@ namespace CourseService.Domain.Repository
                 });
             }
         }
-        public async Task<(Topic Topic, WebAPIErrorMessage Error)> GetTopicByIdAsync(int topicId)
+        public async Task<(List<Topic>? Topic, WebAPIErrorMessage? Error)> GetTopicByIdAsync(int courseId)
         {
             try
             {
                 using (var context = _contextFactory.CreateDbContext())
                 {
-                    var topic = await context.Topics.FindAsync(topicId);
+                    var topic = await context.Topics.ToListAsync();
                     if (topic == null)
                     {
                         return (null, new WebAPIErrorMessage
@@ -192,7 +192,7 @@ namespace CourseService.Domain.Repository
             }
 
         }
-        public async Task<(Topic Topic, WebAPIErrorMessage Error)> AddTopicAsync(Topic topic)
+        public async Task<(Topic? Topic, WebAPIErrorMessage? Error)> AddTopicAsync(Topic topic)
         {
             try
             {
@@ -212,7 +212,7 @@ namespace CourseService.Domain.Repository
                 });
             }
         }
-        public async Task<(Topic Topic, WebAPIErrorMessage Error)> UpdateTopicAsync(Topic topic)
+        public async Task<(Topic? Topic, WebAPIErrorMessage? Error)> UpdateTopicAsync(Topic topic)
         {
             try
             {
@@ -244,7 +244,7 @@ namespace CourseService.Domain.Repository
             }
         }
 
-        public async Task<(Topic Topic, WebAPIErrorMessage Error)> DeleteTopicAsync(int topicId)
+        public async Task<(Topic? Topic, WebAPIErrorMessage? Error)> DeleteTopicAsync(int topicId)
         {
             try
             {
@@ -279,7 +279,7 @@ namespace CourseService.Domain.Repository
 
      #region Subtopics
 
-        public async Task<(List<SubTopic> subTopics, WebAPIErrorMessage Error)> GetSubTopicsByTopicId(int topicId)
+        public async Task<(List<SubTopic>? subTopics, WebAPIErrorMessage? Error)> GetSubTopicsByTopicId(int topicId)
         {
             try
             {
@@ -310,7 +310,7 @@ namespace CourseService.Domain.Repository
             }
         }
 
-        public async Task<(SubTopic subTopics, WebAPIErrorMessage Error)> GetSubTopicById(int subTopicId)
+        public async Task<(SubTopic? subTopics, WebAPIErrorMessage? Error)> GetSubTopicById(int subTopicId)
         {
             try
             {
@@ -338,7 +338,7 @@ namespace CourseService.Domain.Repository
             }
         }
 
-        public async Task<(SubTopic subTopics, WebAPIErrorMessage Error)> AddSubTopic(SubTopic subTopic)
+        public async Task<(SubTopic? subTopics, WebAPIErrorMessage? Error)> AddSubTopic(SubTopic subTopic)
         {
             try
             {
@@ -367,7 +367,7 @@ namespace CourseService.Domain.Repository
             }
         }
 
-        public async Task<(SubTopic subTopics, WebAPIErrorMessage Error)> UpdateSubTopic(SubTopic subTopic)
+        public async Task<(SubTopic? subTopics, WebAPIErrorMessage? Error)> UpdateSubTopic(SubTopic subTopic)
         {
             try
             {
@@ -400,7 +400,7 @@ namespace CourseService.Domain.Repository
             }
         }
 
-        public async Task<(SubTopic subTopics, WebAPIErrorMessage Error)> DeleteSubTopic(int subTopicId)
+        public async Task<(SubTopic? subTopics, WebAPIErrorMessage? Error)> DeleteSubTopic(int subTopicId)
         {
             try
             {

@@ -21,6 +21,16 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1"
     });
 });
+//allow Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 // Database
 builder.Services.AddDbContextFactory<AppDbContext>(options =>
@@ -42,6 +52,7 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty;
     });
 }
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

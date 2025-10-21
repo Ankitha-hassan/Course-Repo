@@ -12,8 +12,8 @@ namespace CourseService.Domain.Interfaces
         Task<(Course? Course, WebAPIErrorMessage? Error)> DeleteCourse(int courseId);
 
         // For topics
-        Task<(List<Topic>? Topics, WebAPIErrorMessage? Error)> GetAllTopics();
-        Task<(List<Topic>? Topic, WebAPIErrorMessage? Error)> GetTopicById(int courseId);
+        Task<(List<Topic>? Topics, WebAPIErrorMessage? Error)> GetAllTopicsByCourseId(int courseId);
+        Task<(List<Topic>? Topic, WebAPIErrorMessage? Error)> GetTopicById(int topicId);
         Task<(Topic? Topic, WebAPIErrorMessage? Error)> AddTopic(Topic topic);
         Task<(Topic? Topic, WebAPIErrorMessage? Error)> UpdateTopic(Topic topic);
         Task<(Topic? Topic, WebAPIErrorMessage? Error)> DeleteTopic(int topicId);

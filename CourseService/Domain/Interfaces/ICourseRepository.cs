@@ -13,8 +13,8 @@ namespace CourseService.Domain.Interfaces
 
 
         //Topic
-      Task<(List<Topic>? Topics, WebAPIErrorMessage? Error)> GetAllTopicsAsync();
-        Task<(List<Topic>? Topic, WebAPIErrorMessage? Error)> GetTopicByIdAsync(int courseId);
+      Task<(List<Topic>? Topics, WebAPIErrorMessage? Error)> GetAllTopicsByCourseIdAsync(int courseId);
+        Task<(List<Topic>? Topic, WebAPIErrorMessage? Error)> GetTopicByIdAsync(int topicId);
         Task<(Topic? Topic, WebAPIErrorMessage? Error)> AddTopicAsync(Topic topic);
         Task<(Topic? Topic, WebAPIErrorMessage? Error)> UpdateTopicAsync(Topic topic);
         Task<(Topic? Topic, WebAPIErrorMessage? Error)> DeleteTopicAsync(int topicId);

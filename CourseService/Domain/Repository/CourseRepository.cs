@@ -146,14 +146,15 @@ namespace CourseService.Domain.Repository
         #endregion
 
      #region Topic
-        public async Task<(List<Topic>? Topics, WebAPIErrorMessage? Error)> GetAllTopicsAsync()
+        public async Task<(List<Topic>? Topics, WebAPIErrorMessage? Error)> GetAllTopicsByCourseIdAsync(int courseId)
         {
             try
             {
                 using (var context = _contextFactory.CreateDbContext())
                 {
-                    var topics = await context.Topics.ToListAsync();
-                    return (topics, null);
+                    var topics = await context.Topics
+                                              .Where(t => t.CourseId == courseId)
+                                              .ToListAsync(); return (topics, null);
                 }
             }
             catch (Exception ex)
@@ -165,13 +166,15 @@ namespace CourseService.Domain.Repository
                 });
             }
         }
-        public async Task<(List<Topic>? Topic, WebAPIErrorMessage? Error)> GetTopicByIdAsync(int courseId)
+        public async Task<(List<Topic>? Topic, WebAPIErrorMessage? Error)> GetTopicByIdAsync(int topicId)
         {
             try
             {
                 using (var context = _contextFactory.CreateDbContext())
                 {
-                    var topic = await context.Topics.ToListAsync();
+                    var topic = await context.Topics
+                                             .Where(t=>t.TopicId == topicId)
+                                             .ToListAsync();
                     if (topic == null)
                     {
                         return (null, new WebAPIErrorMessage

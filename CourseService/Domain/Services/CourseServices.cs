@@ -40,14 +40,14 @@ namespace CourseService.Domain.Services
         #endregion
 
         #region Topics service
-        public async Task<(List<Topic>? Topics, WebAPIErrorMessage? Error)> GetAllTopics()
+        public async Task<(List<Topic>? Topics, WebAPIErrorMessage? Error)> GetAllTopicsByCourseId(int courseId)
         {
-            return await _courseRepository.GetAllTopicsAsync();
+            return await _courseRepository.GetAllTopicsByCourseIdAsync(courseId);
         }
 
-        public async Task<(List<Topic>? Topic, WebAPIErrorMessage? Error)> GetTopicById(int courseId)
+        public async Task<(List<Topic>? Topic, WebAPIErrorMessage? Error)> GetTopicById(int topicId)
         {
-            return await _courseRepository.GetTopicByIdAsync(courseId);
+            return await _courseRepository.GetTopicByIdAsync(topicId);
         }
 
         public async Task<(Topic? Topic, WebAPIErrorMessage? Error)> AddTopic(Topic topic)

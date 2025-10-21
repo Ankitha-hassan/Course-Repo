@@ -94,9 +94,9 @@ namespace CourseService.Controllers
         #region Topic Endpoints
 
         [HttpGet(RouteMapConstants.GetAllTopicsByCourseId)]
-        public async Task<IActionResult> GetAllTopics()
+        public async Task<IActionResult> GetAllTopicsByCourseId(int courseId)
         {
-            var (topics, error) = await _courseService.GetAllTopics();
+            var (topics, error) = await _courseService.GetAllTopicsByCourseId(courseId);
             if (error != null)
                 return StatusCode(500, error);
 
@@ -108,14 +108,14 @@ namespace CourseService.Controllers
 
        
         [HttpGet(RouteMapConstants.GetTopicById)]
-        public async Task<IActionResult> GetTopicById(int courseId)
+        public async Task<IActionResult> GetTopicById(int topicId)
         {
-            var (topic, error) = await _courseService.GetTopicById(courseId);
+            var (topic, error) = await _courseService.GetTopicById(topicId);
             if (error != null)
                 return StatusCode(500, error);
 
             if (topic == null)
-                return NotFound($"Topic with ID {courseId} not found");
+                return NotFound($"Topic with ID {topicId} not found");
 
             return Ok(topic);
         }

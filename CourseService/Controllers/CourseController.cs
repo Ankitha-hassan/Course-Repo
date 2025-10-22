@@ -2,6 +2,7 @@ using CourseService.Constant;
 using CourseService.DataAccess.Models;
 using CourseService.Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 namespace CourseService.Controllers
 {
@@ -45,10 +46,21 @@ namespace CourseService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCourse([FromBody] Course course)
+        public async Task<IActionResult> AddCourse([FromForm] Course course)
         {
-            if (course == null)
-                return BadRequest("Course data is required");
+            var file = Request.Form.Files.FirstOrDefault(); 
+
+            if (file != null && file.Length > 0)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    course.Image = memoryStream.ToArray();
+                }
+            }
+
+            course.CreatedDate = DateTime.UtcNow;
+            course.UpdatedDate = DateTime.UtcNow;
 
             var (created, error) = await _courseService.AddCourse(course);
             if (error != null)
@@ -58,10 +70,18 @@ namespace CourseService.Controllers
         }
 
         [HttpPut(RouteMapConstants.UpdateCourseById)]
-        public async Task<IActionResult> UpdateCourse(int courseId, [FromBody] Course course)
+        public async Task<IActionResult> UpdateCourse(int courseId, [FromForm] Course course)
         {
             if (course == null)
                 return BadRequest("Course data is required");
+
+            var file = Request.Form.Files.FirstOrDefault();
+            if (file != null)
+            {
+                using var ms = new MemoryStream();
+                await file.CopyToAsync(ms);
+                course.Image = ms.ToArray();
+            }
 
             course.CourseId = courseId;
             var (updated, error) = await _courseService.UpdateCourse(course);

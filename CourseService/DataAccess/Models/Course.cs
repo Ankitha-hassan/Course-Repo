@@ -11,6 +11,7 @@ namespace CourseService.DataAccess.Models
         public string CourseName { get; set; } = string.Empty;
 
         public string Description { get; set; } = string.Empty;
+        public byte[]? Image {  get; set; }
 
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 

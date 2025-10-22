@@ -100,6 +100,7 @@ namespace CourseService.Domain.Repository
 
                     existingCourse.CourseName = course.CourseName;
                     existingCourse.Description = course.Description;
+                    existingCourse.Image = course.Image;
                     await context.SaveChangesAsync();
                     return (existingCourse, null);
                 }

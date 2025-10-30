@@ -38,6 +38,7 @@ builder.Services.AddDbContextFactory<AppDbContext>(options =>
 
 // Controllers
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
